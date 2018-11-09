@@ -10,10 +10,13 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import * as CONFIG from './config';
 import MenuBuilder from './menu';
+import decayFunction from './decayFunction';
+import { SOLVED, NEW_QUESTION } from './constants/constants';
 
 export default class AppUpdater {
   constructor() {
@@ -67,10 +70,13 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+  // Make a frameless and big window to RULE THEM ALL!
+  const { size } = screen.getPrimaryDisplay();
   mainWindow = new BrowserWindow({
+    frame: false,
     show: false,
-    width: 1024,
-    height: 728
+    width: size.width,
+    height: size.height
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -87,6 +93,30 @@ app.on('ready', async () => {
       mainWindow.show();
       mainWindow.focus();
     }
+
+    // Force foreground
+    // app.dock.hide();
+    // mainWindow.setAlwaysOnTop(true, 'floating');
+    // mainWindow.setVisibleOnAllWorkspaces(true);
+    // mainWindow.setFullScreenable(false);
+
+    // use N to record how many times a problem is popped.
+    // NEED-TO-TEST
+    let N = 1;
+    // upon receiving 'problem solved msg'
+    ipcMain.on(SOLVED, (_, problemGroup) => {
+      // problem solved, hide main window until next problem time
+      console.log(problemGroup);
+      N += 1;
+      mainWindow.minimize();
+      setTimeout(() => {
+        mainWindow.webContents.send(NEW_QUESTION, {
+          level: Math.floor(N / CONFIG.repetitiveness) + 1
+        });
+        mainWindow.show();
+        mainWindow.focus();
+      }, decayFunction(N));
+    });
   });
 
   mainWindow.on('closed', () => {
