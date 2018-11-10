@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=Poor+Story');
+@import url('https://fonts.googleapis.com/css?family=Kalam');
 .container {
   top: 30%;
   left: 10px;
   text-align: center;
 }
 .question {
-  font-family: 'Poor Story', cursive;
+  font-family: 'Kalam', cursive;
+  font-size: 3rem;
 }
 .container h2 {
   font-size: 5rem;

@@ -16,9 +16,10 @@ type Props = {
 };
 
 type State = {
-  QG: questionGenerator,
+  QGClass: questionGenerator,
   question: string,
   answer: string,
+  QG: questionGenerator,
   hasher?: string => string
 };
 
@@ -28,7 +29,8 @@ export default class AnswerMePage extends Component<Props, State> {
   state: State = {
     question: '',
     answer: '',
-    QG: null
+    QG: null,
+    QGClass: null
   };
 
   componentWillMount() {
@@ -42,21 +44,22 @@ export default class AnswerMePage extends Component<Props, State> {
       question,
       answer: QGClass.hasher(answer),
       hasher: QGClass.hasher,
-      QG
+      QG,
+      QGClass
     });
   }
 
   componentDidMount() {
     ipcRenderer.on(NEW_QUESTION, (_, arg) => {
       console.log(arg);
-      const { QG } = this.state;
+      const { QG, QGClass } = this.state;
       QG.level = arg.level;
       const { question, answer } = QG.generator();
 
       this.setState({
         question,
-        answer: QG.hasher(answer),
-        hasher: QG.hasher
+        answer: QGClass.hasher(answer),
+        hasher: QGClass.hasher
       });
     });
   }
