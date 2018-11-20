@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
-import styles from './Answer.css';
+import { Form, Button, Row } from 'reactstrap';
+import { SOLVED } from '../constants/constants';
+// import styles from './Answer.css';
 
 type Props = {
   answer: string,
@@ -56,31 +58,32 @@ export default class Answer extends Component<Props, State> {
     console.log(this.state);
   }
 
-  checkAnswer() {
+  checkAnswer(event) {
+    event.preventDefault();
     const { trueAnswer, hashAnswer } = this.state;
     if (trueAnswer === hashAnswer) {
-      ipcRenderer.send('solved', 'MATH');
+      ipcRenderer.send(SOLVED, 'MATH');
       this.setState({
-        userAnswer: ''
+        userAnswer: '',
+        hashAnswer: ''
       });
     } else {
-      console.log('false');
+      console.log('Wrong answer');
     }
   }
 
   render() {
     const { userAnswer } = this.state;
     return (
-      <div className={styles.container} data-tid="container">
-        Answer:{' '}
-        <input value={userAnswer} onChange={evt => this.updateValue(evt)} />
-        <input
-          type="button"
-          value="submit"
-          id="addpix"
-          onClick={() => this.checkAnswer()}
-        />
-      </div>
+      <React.Fragment>
+        <Row>Your answer:</Row>
+        <Row>
+          <Form id="answer" onSubmit={evt => this.checkAnswer(evt)}>
+            <input value={userAnswer} onChange={evt => this.updateValue(evt)} />{' '}
+            <Button color="success">Submit</Button>
+          </Form>
+        </Row>
+      </React.Fragment>
     );
   }
 }

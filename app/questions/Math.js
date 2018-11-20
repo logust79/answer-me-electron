@@ -66,7 +66,10 @@ export default class MATH implements questionGenerator<Level> {
           answer: A.toString()
         };
       default:
-        throw new Error('level out of range!');
+        return {
+          question: 'Password',
+          answer: 'apple'
+        };
     }
   }
 }

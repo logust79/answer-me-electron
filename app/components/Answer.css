@@ -11,3 +11,31 @@
 .container a {
   font-size: 1.4rem;
 }
+
+input {
+  padding: 12px 20px;
+  font-size: 1.4rem;
+}
+
+.button {
+  background: #76b3fa;
+  border-radius: 100px;
+  padding: 20px 60px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.45em;
+  margin: 0 15px;
+}
+
+/* Hover state animation applied here */
+.button:hover {
+  -webkit-animation: hover 1200ms linear 2 alternate;
+  animation: hover 1200ms linear 2 alternate;
+}
+
+/* Active state animation applied here */
+.button:active {
+  -webkit-animation: active 1200ms ease 1 alternate;
+  animation: active 1200ms ease 1 alternate;
+  background: #5f9be0;
+}

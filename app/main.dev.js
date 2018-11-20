@@ -94,12 +94,13 @@ app.on('ready', async () => {
       mainWindow.focus();
     }
 
-    // Force foreground
-    // app.dock.hide();
-    // mainWindow.setAlwaysOnTop(true, 'floating');
-    // mainWindow.setVisibleOnAllWorkspaces(true);
-    // mainWindow.setFullScreenable(false);
-
+    // Force foreground only when it is in production mode
+    if (process.env.NODE_ENV === 'production') {
+      app.dock.hide();
+      mainWindow.setAlwaysOnTop(true, 'floating');
+      mainWindow.setVisibleOnAllWorkspaces(true);
+      mainWindow.setFullScreenable(false);
+    }
     // use N to record how many times a problem is popped.
     // NEED-TO-TEST
     let N = 1;
@@ -108,7 +109,7 @@ app.on('ready', async () => {
       // problem solved, hide main window until next problem time
       console.log(problemGroup);
       N += 1;
-      mainWindow.minimize();
+      mainWindow.hide();
       setTimeout(() => {
         mainWindow.webContents.send(NEW_QUESTION, {
           level: Math.floor(N / CONFIG.repetitiveness) + 1

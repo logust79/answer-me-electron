@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { Row } from 'reactstrap';
 import styles from './Question.css';
 
 type Props = {
@@ -15,9 +16,12 @@ export default class Question extends Component<Props> {
     const { question } = this.props;
 
     return (
-      <div className={styles.container} data-tid="container">
-        Question: <span className={styles.question}>{question}</span>
-      </div>
+      <React.Fragment>
+        <Row>Question:</Row>
+        <Row>
+          <span className={styles.question}>{question}</span>
+        </Row>
+      </React.Fragment>
     );
   }
 }
